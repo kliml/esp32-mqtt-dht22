@@ -59,7 +59,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
 }
 
 void wifi_init(void) {
-	ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     sta_netif = esp_netif_create_default_wifi_sta();
     assert(sta_netif);
@@ -166,14 +166,14 @@ static void mqtt_app_start(void)
 
 void DHT_task(void *pvParameter)
 {
-	setDHTgpio( DHT22_PIN );
-	ESP_LOGI(TAG, "Starting DHT Task");
+    setDHTgpio( DHT22_PIN );
+    ESP_LOGI(TAG, "Starting DHT Task");
 
     char hum[10];
     char temp[10];
 
-	while(1) {  
-		xEventGroupWaitBits(
+    while(1) {  
+        xEventGroupWaitBits(
             event_group_bits,
             MQTT_CONNECTED_BIT,
             pdFALSE,
@@ -182,33 +182,33 @@ void DHT_task(void *pvParameter)
         );
         
         ESP_LOGI(TAG, "Reading DHT");
-		int ret = readDHT();
-		
-		errorHandler(ret);
+        int ret = readDHT();
+        
+        errorHandler(ret);
 
         sprintf(hum, "%.1f", getHumidity());
         sprintf(temp, "%.1f", getTemperature());
 
-		ESP_LOGI(TAG, "Hum %s\n", hum);
-		ESP_LOGI(TAG, "Tmp %s\n", temp);
+        ESP_LOGI(TAG, "Hum %s\n", hum);
+        ESP_LOGI(TAG, "Tmp %s\n", temp);
 
         int msg_id = esp_mqtt_client_publish(mqtt_client, MQTT_PUB_HUM, hum, 0, 1, 0);
         ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
         msg_id = esp_mqtt_client_publish(mqtt_client, MQTT_PUB_TEMP, temp, 0, 1, 0);
         ESP_LOGI(TAG, "sent publish successful, msg_id=%d", msg_id);
-		
-		// -- wait at least 2 sec before reading again ------------
-		// The interval of whole process must be beyond 2 seconds !! 
-		vTaskDelay( 10000 / portTICK_RATE_MS );
-	}
+        
+        // -- wait at least 2 sec before reading again ------------
+        // The interval of whole process must be beyond 2 seconds !! 
+        vTaskDelay( 10000 / portTICK_RATE_MS );
+    }
 }
 
 void app_main()
 {
-	nvs_flash_init();
-	vTaskDelay( 1000 / portTICK_RATE_MS );
+    nvs_flash_init();
+    vTaskDelay( 1000 / portTICK_RATE_MS );
     event_group_bits = xEventGroupCreate();
     wifi_init();
     mqtt_app_start();
-	xTaskCreate( &DHT_task, "DHT_task", 2048, NULL, 5, NULL );
+    xTaskCreate( &DHT_task, "DHT_task", 2048, NULL, 5, NULL );
 }
