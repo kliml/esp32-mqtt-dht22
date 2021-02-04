@@ -1,0 +1,39 @@
+menu "Program Configuration"
+
+    config WIFI_SSID
+        string "WiFi SSID"
+        default "myssid"
+        help
+            SSID (network name) for the program to connect to.
+
+    config WIFI_PASS
+        string "WiFi Password"
+        default "mypassword"
+        help
+            WiFi password (WPA or WPA2) for the program to use.
+
+    config MQTT_BROKER_URL
+        string "MQTT Broker URL"
+        default "mybrokerurl"
+        help
+            Mqtt broker URL for the program to use.
+
+    config MQTT_PUB_TEMP
+        string "MQTT Temperature Topic"
+        default "esp32/dht/temperature"
+        help
+            Mqtt temperature topic URL for the program to use.
+
+    config MQTT_PUB_HUM
+        string "MQTT Humidity Topic"
+        default "esp32/dht/humidity"
+        help
+            Mqtt humidity topic URL for the program to use.
+
+    config DHT22_PIN
+        int "DHT22 Pin"
+        default 21
+        help
+            Pin for the DHT22 sensor to use.
+
+endmenu
